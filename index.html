@@ -1,39 +1,99 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>基金估值助手</title>
-<style>
-body{font-family:Arial,sans-serif;background:#121212;color:#eee;max-width:800px;margin:auto;padding:20px}
-h1{color:#6cf}input,button,select{padding:8px;margin:4px;border-radius:6px;border:1px solid #555}
-.card{background:#1e1e1e;padding:12px;border-radius:10px;margin-top:10px}
-.small{color:#aaa;font-size:13px}
-</style>
-</head>
-<body>
-<h1>📈 基金估值助手（纯网页）</h1>
+<！doctype 超文本标记语言>
+<超文本标记语言 朗="zh">
+<头>
+  <元 字符集="UTF-8">
+  <标题>基金分析系统</标题>
+  <风格>
+身体 {
+字体系列：Arial；
+背景：#f5f5f5；
+填料：20px；
+    }
+.卡片 {
+      背景: 白色的;
+填料：15px；
+边缘：10px0；
+边界半径：10px；
+箱形阴影：02px5px RGBA(0,0,0,0.1);
+    }
+.利润 {
+      颜色: 绿色的;
+      字体粗细: 大胆的;
+    }
+.损失 {
+      颜色: 红色的;
+      字体粗细: 大胆的;
+    }
+  </风格>
+</头>
+
+<身体>
+
+<H2>📊 我的基金观察池</H2>
+
+<div 身份标识="列表"></div>
+
+<脚本>
+Const基金=[
+{ 姓名: "嘉实全球产业升级 017731", 返回: 12.5 },
+{ 姓名: "富国美股基金 100055", 返回: -3.2 },
+{姓名："中航机遇领先018956"，返回：8.7}
+];
+
+Const容器=文件.getElementById("列表")；
+
+基金.foreach(f=>{
+Const div=文件。createElement("div")；
+div.className="卡"；
+
+Const CLS=f.返回>=0？“利润：损失；
+
+div.innerHTML='
+<div>📌${f.姓名}</div>
+<div 班级="${CLS}">收益：${f.返回}%</div>
+`;
+
+容器.appendChild(div)；
+});
+</脚本>
+
+</身体>
+</超文本标记语言><！doctype > 超文本标记语言>>
+<超文本标记语言 朗="zh-CN">
+<头>
+<元 字符集="UTF-8">
+<元 姓名="视口" 内容="宽度=设备宽度，初始比例=1">
+<标题>基金估值助手</标题>
+<风格>
+身体{字体系列：Arial，无衬线；背景：#121212；颜色：#Eee；最大宽度：800px；边缘：自动；填充：20px}
+H1{颜色：#6cf}输入，按钮，选择{padding:8px；边缘：4PX；边界半径：6px；边界：1PX固体#555}
+.卡片{背景：#1e1e1e；padding:12px；边界半径：10px；上边距：10px}
+.小的{颜色：#AAA；字体大小：13px}
+</风格>
+</头>
+<身体>
+<H1>📈 基金估值助手（纯网页）</H1>
 <div>
-<input id="code" placeholder="输入基金代码，如018956">
-<button onclick="addFund()">加入自选</button>
-<select id="refresh">
-<option value="0">不自动刷新</option>
-<option value="10000">10秒</option>
-<option value="30000" selected>30秒</option>
-<option value="60000">60秒</option>
-</select>
+<输入 身份标识="代码" 占位符="输入基金代码，如018956">
+<按钮 onClick="addFund()">加入自选</按钮>
+<选择 身份标识="刷新">
+<选项 价值="0">不自动刷新</选项>
+<选项 价值="10000">10秒</选项>
+<选项 价值="30000" 挑选出来的>30秒</选项>
+<选项 价值="60000">60秒</选项>
+</选择>
 </div>
-<div class="small">说明：此页面已完成自选、自动刷新框架。由于基金实时估值接口普遍限制浏览器跨域访问，直接打开HTML通常无法稳定获取实时估值，需要替换为可用的公开接口或自行部署接口。</div>
-<div id="list"></div>
-<script>
-let funds=JSON.parse(localStorage.getItem("funds")||'["018956","013841","017731","022364"]');
-let timer=null;
-function save(){localStorage.setItem("funds",JSON.stringify(funds));render();}
-function addFund(){
- let c=document.getElementById("code").value.trim();
- if(c&&!funds.includes(c)){funds.push(c);save();}
+<div 班级="small">说明：此页面已完成自选、自动刷新框架。由于基金实时估值接口普遍限制浏览器跨域访问，直接打开HTML通常无法稳定获取实时估值，需要替换为可用的公开接口或自行部署接口。</div>
+<div 身份标识="列表"></div>
+<脚本>
+让基金=JSON.解析(localStorage.getItem("资金")||'["018956","013841","017731","022364"]');
+让计时器=null；
+功能节省(){localStorage.setItem("资金"，JSON.使字符串化(基金))；提供()；}
+功能addFund(){
+让c=文件.getElementById("代码").价值.修剪()；
+如果(c&&！基金.包括(c)){基金.推(c)；节省()；}
 }
-function del(i){funds.splice(i,1);save();}
+功能Del(我){基金.拼接(我，1)；节省()；}
 async function load(code){
  // 在这里替换为可用的基金数据接口
  return {name:"基金 "+code,estimate:"--",nav:"--",time:new Date().toLocaleTimeString()};
