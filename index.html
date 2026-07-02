@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>基金估值助手</title>
+<style>
+body{font-family:Arial,sans-serif;background:#121212;color:#eee;max-width:800px;margin:auto;padding:20px}
+h1{color:#6cf}input,button,select{padding:8px;margin:4px;border-radius:6px;border:1px solid #555}
+.card{background:#1e1e1e;padding:12px;border-radius:10px;margin-top:10px}
+.small{color:#aaa;font-size:13px}
+</style>
+</head>
+<body>
+<h1>📈 基金估值助手（纯网页）</h1>
+<div>
+<input id="code" placeholder="输入基金代码，如018956">
+<button onclick="addFund()">加入自选</button>
+<select id="refresh">
+<option value="0">不自动刷新</option>
+<option value="10000">10秒</option>
+<option value="30000" selected>30秒</option>
+<option value="60000">60秒</option>
+</select>
+</div>
+<div class="small">说明：此页面已完成自选、自动刷新框架。由于基金实时估值接口普遍限制浏览器跨域访问，直接打开HTML通常无法稳定获取实时估值，需要替换为可用的公开接口或自行部署接口。</div>
+<div id="list"></div>
+<script>
+let funds=JSON.parse(localStorage.getItem("funds")||'["018956","013841","017731","022364"]');
+let timer=null;
+function save(){localStorage.setItem("funds",JSON.stringify(funds));render();}
+function addFund(){
+ let c=document.getElementById("code").value.trim();
+ if(c&&!funds.includes(c)){funds.push(c);save();}
+}
+function del(i){funds.splice(i,1);save();}
+async function load(code){
+ // 在这里替换为可用的基金数据接口
+ return {name:"基金 "+code,estimate:"--",nav:"--",time:new Date().toLocaleTimeString()};
+}
+async function render(){
+ let div=document.getElementById("list");div.innerHTML="";
+ for(let i=0;i<funds.length;i++){
+   let d=await load(funds[i]);
+   div.innerHTML+=`<div class="card"><b>${d.name}</b><br>
+   代码：${funds[i]}<br>估值：${d.estimate}<br>净值：${d.nav}<br>更新时间：${d.time}
+   <br><button onclick="del(${i})">删除</button></div>`;
+ }
+}
+document.getElementById("refresh").onchange=e=>{
+ if(timer)clearInterval(timer);
+ let v=+e.target.value;
+ if(v)timer=setInterval(render,v);
+};
+render();
+document.getElementById("refresh").dispatchEvent(new Event("change"));
+</script>
+</body>
+</html>
